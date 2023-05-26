@@ -1,23 +1,10 @@
 import axios from "axios";
 // import Raven from "raven-js";
 import { toast } from "react-toastify";
+import auth from "./authService";
 
-// // Add a request interceptor
-// axios.interceptors.request.use(
-//   function (config) {
-//     const token = localStorage.getItem("access-token");
-
-//     if (token) {
-//       config.headers["x-auth-token"] = token;
-//     }
-//     // Do something before request is sent
-//     return config;
-//   },
-//   function (error) {
-//     // Do something with request error
-//     return Promise.reject(error);
-//   }
-// );
+axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
+console.log(axios.defaults.headers.common);
 
 axios.interceptors.response.use(null, (error) => {
   const expecdtedError =
