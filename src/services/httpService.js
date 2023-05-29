@@ -1,10 +1,9 @@
 import axios from "axios";
-// import Raven from "raven-js";
+import { func } from "prop-types";
 import { toast } from "react-toastify";
-import auth from "./authService";
+// import auth from "./authService";
 
-axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
-console.log(axios.defaults.headers.common);
+// axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
 
 axios.interceptors.response.use(null, (error) => {
   const expecdtedError =
@@ -13,16 +12,20 @@ axios.interceptors.response.use(null, (error) => {
     error.response.status < 500;
   if (!expecdtedError) return Promise.reject(error);
   {
-    // Raven.captureException(error);
     console.log("Logging The Error", error);
     toast.error("Unexpected Error Occured");
   }
   return Promise.reject(error);
 });
 
+function setJwt(jwt) {
+  axios.defaults.headers.common["x-auth-token"] = jwt;
+}
+
 export default {
   get: axios.get,
   post: axios.post,
   put: axios.put,
   delete: axios.delete,
+  setJwt,
 };
